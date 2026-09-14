@@ -1,0 +1,33 @@
+name: Build macOS DMG - Unsigned
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Universal DMG
+        run: npm run dmg:unsigned
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+
+      - name: Upload DMG
+        uses: actions/upload-artifact@v4
+        with:
+          name: MiniMeet-Manager-macOS-Unsigned
+          path: dist-macos/*.dmg
+          if-no-files-found: error
+          retention-days: 14

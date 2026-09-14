@@ -1,0 +1,37 @@
+appId: com.baskaya.minimeet.manager
+productName: MiniMeet Manager
+asar: true
+directories:
+  output: dist-macos-signed
+files:
+  - app/**/*
+  - package.json
+mac:
+  category: public.app-category.productivity
+  minimumSystemVersion: "11.0"
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.inherit.plist
+  notarize: true
+  target:
+    - target: dmg
+      arch:
+        - universal
+  extendInfo:
+    NSCameraUsageDescription: "MiniMeet, görüntülü toplantı için kameranızı kullanır."
+    NSMicrophoneUsageDescription: "MiniMeet, toplantı sesini iletmek için mikrofonunuzu kullanır."
+    NSScreenCaptureUsageDescription: "MiniMeet, toplantıda ekran paylaşımı yapabilmeniz için ekran kaydı erişimi kullanır."
+dmg:
+  title: "MiniMeet Manager"
+  artifactName: "MiniMeet-Manager-macOS-${version}-${arch}-signed.${ext}"
+  window:
+    width: 560
+    height: 380
+  contents:
+    - x: 160
+      y: 190
+    - x: 400
+      y: 190
+      type: link
+      path: /Applications

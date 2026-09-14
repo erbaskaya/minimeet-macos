@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MiniMeet Yönetici</title>
+  <link rel="stylesheet" href="media.css" />
+</head>
+<body>
+  <div class="app" id="app">
+    <div class="titlebar">
+      <div class="brand"><span class="brand-mark">M</span><div><b>MiniMeet Yönetici</b><small>Toplantı yönetimi</small></div></div>
+      <div class="window-actions">
+        <button id="minimizeBtn" title="Küçült">—</button>
+        <button id="closeBtn" class="danger" title="Kapat">×</button>
+      </div>
+    </div>
+
+    <section id="setupView" class="setup-view">
+      <div class="hero">
+        <div class="eyebrow">YÖNETİCİ UYGULAMASI</div>
+        <h1>MiniMeet toplantısını başlatın</h1>
+        <p>Katılımcı tarayıcıdan bağlanır. Kamera paneli ve kontrol çubuğu diğer uygulamaların üstünde kalır.</p>
+      </div>
+
+      <div class="setup-grid">
+        <div class="preview-card">
+          <video id="selfPreview" autoplay playsinline muted></video>
+          <div id="selfPreviewOff" class="video-off">Kamera kapalı</div>
+          <div class="preview-label">Siz</div>
+        </div>
+        <div class="setup-controls">
+          <label class="field-label">Yönetici adı</label>
+          <input id="managerName" class="field" maxlength="50" placeholder="Adınız" autocomplete="name" />
+          <div class="duration-box">
+            <div class="duration-title">Toplantı süresi <span>Zorunlu</span></div>
+            <label class="duration-option"><input type="radio" name="durationMode" value="unlimited" /> <span><strong>Süresiz</strong><small>Siz bitirene kadar devam eder.</small></span></label>
+            <label class="duration-option"><input type="radio" name="durationMode" value="timed" /> <span><strong>Süreli</strong><small>Dakika cinsinden süre belirleyin.</small></span></label>
+            <div id="durationMinutesRow" class="duration-minutes-row hidden"><input id="durationMinutes" class="field" type="number" min="1" max="1440" step="1" inputmode="numeric" placeholder="Örn. 45" /><span>dakika</span></div>
+            <div class="duration-help">Sayaç, katılımcı bağlandığı anda başlar. Son 5 dakika geri sayım olarak görünür.</div>
+          </div>
+          <div class="room-card">
+            <span>Toplantı kodu</span>
+            <strong id="roomCode">------</strong>
+          </div>
+          <label class="field-label">Katılımcı bağlantısı</label>
+          <div class="link-row">
+            <input id="studentLink" readonly />
+            <button id="copySetupLink" class="secondary">Kopyala</button>
+          </div>
+          <div class="device-grid">
+            <label>Kamera<select id="cameraSelect" class="field"></select></label>
+            <label>Mikrofon<select id="micSelect" class="field"></select></label>
+          </div>
+          <div class="background-setting setup-background-setting">
+            <div><strong>Arka plan</strong><small>Normal, orta bulanık veya kendi resminiz.</small></div>
+            <div class="background-controls">
+              <select id="backgroundSelect" class="field">
+                <option value="normal">Normal</option>
+                <option value="blur">Bulanık (Orta)</option>
+                <option value="image">Arka Plan Resmi</option>
+              </select>
+              <button id="backgroundImageBtn" class="secondary" type="button">Resim seç</button>
+            </div>
+          </div>
+          <input id="backgroundImageInput" type="file" accept="image/png,image/jpeg,image/webp" hidden />
+          <div class="device-buttons">
+            <button id="setupMicBtn" class="toggle active">🎤 Mikrofon açık</button>
+            <button id="setupCamBtn" class="toggle active">🎥 Kamera açık</button>
+          </div>
+          <div id="turnStatus" class="network-state">Bağlantı ayarları kontrol ediliyor…</div>
+          <button id="startLessonBtn" class="primary">Toplantıyı Başlat</button>
+          <div id="setupStatus" class="setup-status">Kamera ve mikrofon hazırlanıyor…</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="lessonView" class="lesson-view hidden">
+      <div class="lesson-head">
+        <div><strong>MiniMeet</strong><span id="lessonRoom">Toplantı: ------</span></div>
+        <div class="lesson-head-right"><div id="meetingTimer" class="meeting-timer hidden"><span>Kalan</span><strong id="meetingTimerText">05:00</strong></div><div class="status"><i id="statusDot"></i><span id="statusText">Katılımcı bekleniyor</span></div></div>
+      </div>
+
+      <div id="meetingContent" class="meeting-content">
+        <div id="participantShareView" class="participant-share-view hidden">
+          <div class="participant-share-head"><strong id="participantShareTitle">Katılımcının ekranı</strong><span>Canlı ekran paylaşımı</span></div>
+          <video id="participantScreenVideo" autoplay playsinline muted></video>
+        </div>
+        <div class="video-stack">
+        <div class="video-card remote">
+          <video id="studentVideo" autoplay playsinline muted></video>
+          <div id="studentOff" class="video-off">Katılımcı kamerası kapalı</div>
+          <span id="participantLabel" class="video-label">Katılımcı</span>
+        </div>
+        <div class="video-card self">
+          <video id="teacherVideo" autoplay playsinline muted></video>
+          <div id="teacherOff" class="video-off">Kameranız kapalı</div>
+          <span class="video-label">Siz</span>
+        </div>
+        </div>
+      </div>
+
+      <div id="lessonDeviceDrawer" class="lesson-device-drawer hidden">
+        <div class="drawer-head"><strong>Toplantı ayarları</strong><button id="closeDeviceDrawer">×</button></div>
+        <label>Kamera<select id="lessonCameraSelect" class="field"></select></label>
+        <label>Mikrofon<select id="lessonMicSelect" class="field"></select></label>
+        <div class="background-setting">
+          <div><strong>Arka plan</strong><small>Kamera görüntüsünün arka planını değiştirir.</small></div>
+          <div class="background-controls">
+            <select id="lessonBackgroundSelect" class="field">
+              <option value="normal">Normal</option>
+              <option value="blur">Bulanık (Orta)</option>
+              <option value="image">Arka Plan Resmi</option>
+            </select>
+            <button id="lessonBackgroundImageBtn" class="secondary" type="button">Resim seç</button>
+          </div>
+        </div>
+        <div class="permission-setting">
+          <div><strong>Katılımcı ekran paylaşabilir</strong><small>Açıldığında Katılımcı ekranını paylaşabilir. Aynı anda yalnızca bir kişi ekran paylaşabilir.</small></div>
+          <label class="switch"><input id="participantScreenPermission" type="checkbox" /><span></span></label>
+        </div>
+      </div>
+
+      <div class="mini-footer">
+        <span id="shareStatus">Ekran paylaşılmıyor</span>
+        <button id="copyMiniLink">Linki kopyala</button>
+      </div>
+      <div class="native-resize-corner" title="Köşeden tutup büyütün / küçültün" aria-hidden="true"></div>
+    </section>
+
+    <audio id="remoteAudio" autoplay></audio>
+    <audio id="screenAudio" autoplay></audio>
+  </div>
+
+  <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script>
+  <script src="background.js"></script>
+  <script src="media.js"></script>
+</body>
+</html>

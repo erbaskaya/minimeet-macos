@@ -1,0 +1,22 @@
+{
+  "name": "minimeet-manager",
+  "version": "0.9.0",
+  "description": "MiniMeet Manager - Windows ve macOS toplantı uygulaması",
+  "main": "app/main.js",
+  "author": "MiniMeet",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "pack:win": "electron-packager . MiniMeet-Manager --platform=win32 --arch=x64 --out=dist --overwrite --prune=true --asar=true",
+    "dmg:unsigned": "electron-builder --config electron-builder.unsigned.yml --mac",
+    "dmg:signed": "electron-builder --config electron-builder.signed.yml --mac"
+  },
+  "dependencies": {
+    "peerjs": "1.5.5"
+  },
+  "devDependencies": {
+    "@electron/packager": "18.3.6",
+    "electron": "39.2.4",
+    "electron-builder": "26.0.12"
+  }
+}
