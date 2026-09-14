@@ -28,7 +28,7 @@ Bu sürüm Katılımcı ekran paylaşımı iznini ekler.
 - Arka plan maskeleme canvas compositing duzeltildi.
 - Bulanik (Orta) ve Arka Plan Resmi efektleri gercek kamera track'ine uygulanir.
 
-## v0.9.0 - macOS DMG desteği
+## v0.9.1 - macOS DMG desteği
 - macOS Universal DMG derleme yapılandırması eklendi (Apple Silicon + Intel).
 - GitHub Actions ile Mac sahibi olmadan DMG üretilebilir.
 - Kamera ve mikrofon izinleri macOS sistem izni üzerinden ilk açılışta istenir.
