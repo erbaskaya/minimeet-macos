@@ -101,6 +101,15 @@ export default {
     if (url.pathname === '/api/minimeet-guest') return proxyPost(request, SUPABASE_GUEST_API);
     if (url.pathname.startsWith('/api/')) return json(request, { error: 'NOT_FOUND' }, 404);
 
+    // Cloudflare Workers Static Assets already provides the SPA fallback for
+    // /ders/* via not_found_handling = "single-page-application".
+    // Serve the separate admin document explicitly without a _redirects rule;
+    // _redirects + HTML canonicalization can create a redirect loop.
+    if (url.pathname === '/admin' || url.pathname === '/admin/') {
+      const adminUrl = new URL('/admin.html', url);
+      return env.ASSETS.fetch(new Request(adminUrl, request));
+    }
+
     return env.ASSETS.fetch(request);
   },
 };
