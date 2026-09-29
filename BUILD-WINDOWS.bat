@@ -25,6 +25,7 @@ echo.
 echo [2/3] Windows x64 uygulamasi paketleniyor...
 call npm run pack:win
 if errorlevel 1 goto :error
+if exist "minimeet.config.json" copy /Y "minimeet.config.json" "dist\MiniMeet-Manager-win32-x64\minimeet.config.json" >nul
 
 echo.
 echo [3/3] Tamamlandi.

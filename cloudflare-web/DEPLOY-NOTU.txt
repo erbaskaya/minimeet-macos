@@ -1,0 +1,10 @@
+MiniMeet Web v1.10.0 - Cloudflare
+
+GitHub -> Cloudflare Pages ayarlari:
+Root directory: cloudflare-web
+Framework: None
+Build command: bos
+Output directory: public
+Project name: minimeeting
+
+Detay: CLOUDFLARE-DEPLOY.md

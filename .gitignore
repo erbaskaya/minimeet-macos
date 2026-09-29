@@ -3,3 +3,5 @@ dist/
 *.log
 dist-macos/
 dist-macos-signed/
+.wrangler/
+.dev.vars

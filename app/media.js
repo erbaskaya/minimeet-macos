@@ -1,5 +1,26 @@
-const DOMAIN = 'https://minimeeting.vercel.app';
+let DOMAIN = 'https://minimeeting.pages.dev';
 const $ = (selector) => document.querySelector(selector);
+
+
+function normalizeWebOrigin(value) {
+  try {
+    const url = new URL(String(value || '').trim());
+    if (url.protocol !== 'https:' && url.hostname !== 'localhost' && url.hostname !== '127.0.0.1') return '';
+    return url.origin;
+  } catch {
+    return '';
+  }
+}
+
+async function loadRuntimeConfig() {
+  try {
+    const info = await window.miniMeet.getAppInfo();
+    const configured = normalizeWebOrigin(info?.webOrigin);
+    if (configured) DOMAIN = configured;
+  } catch (error) {
+    console.warn('Web adresi ayari okunamadi, varsayilan Cloudflare adresi kullaniliyor.', error);
+  }
+}
 
 const state = {
   room: '',
@@ -864,5 +885,13 @@ window.miniMeet.onCommand(async (command) => {
   if (command === 'end-lesson') await endMeeting();
 });
 
-createRoom();
-prepareLocalMedia();
+async function initializeMiniMeet() {
+  await loadRuntimeConfig();
+  createRoom();
+  await prepareLocalMedia();
+}
+
+initializeMiniMeet().catch((error) => {
+  console.error('MiniMeet baslatilamadi', error);
+  setSetupStatus('MiniMeet baslatilamadi. Internet ve Cloudflare adresini kontrol edin.');
+});

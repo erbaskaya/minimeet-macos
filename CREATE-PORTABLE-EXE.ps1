@@ -37,7 +37,7 @@ Copy-Item -Path (Join-Path $Root 'app\*') -Destination $AppDir -Recurse -Force
 $RuntimePackage = @'
 {
   "name": "minimeet-manager",
-  "version": "0.8.0",
+  "version": "1.0.0",
   "main": "main.js",
   "private": true
 }
@@ -47,6 +47,8 @@ Set-Content -Path (Join-Path $AppDir 'package.json') -Value $RuntimePackage -Enc
 Write-Host '[4/5] EXE adi duzenleniyor...'
 $ElectronExe = Join-Path $Out 'electron.exe'
 $MiniMeetExe = Join-Path $Out 'MiniMeet-Manager.exe'
+$ExternalConfig = Join-Path $Root 'minimeet.config.json'
+if (Test-Path $ExternalConfig) { Copy-Item -Path $ExternalConfig -Destination (Join-Path $Out 'minimeet.config.json') -Force }
 if (Test-Path $ElectronExe) { Rename-Item -Path $ElectronExe -NewName 'MiniMeet-Manager.exe' -Force }
 
 Write-Host '[5/5] Tamamlandi.' -ForegroundColor Green

@@ -1,0 +1,16 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(self), microphone=(self), display-capture=(self)
+
+/index.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/admin.html
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/*.js
+  Cache-Control: no-cache, must-revalidate
+
+/*.css
+  Cache-Control: no-cache, must-revalidate

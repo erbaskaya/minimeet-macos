@@ -1,36 +1,26 @@
-# MiniMeet Yönetici v0.6
+# MiniMeet Desktop + Cloudflare Web v1.0.0
 
-Bu sürüm Katılımcı ekran paylaşımı iznini ekler.
+Bu repo MiniMeet'in Windows/macOS yonetici uygulamasini ve Cloudflare Pages web istemcisini birlikte icerir.
 
-- Yönetici, yüzen kontrol çubuğundaki Ayarlar bölümünden “Katılımcı ekran paylaşabilir” iznini açıp kapatabilir.
-- İzin varsayılan olarak kapalıdır.
-- Aynı anda yalnızca Yönetici veya Katılımcı ekran paylaşabilir.
-- Katılımcı paylaşırken Yönetici paylaşım düğmesi kilitlenir.
-- Yönetici izni kapatırsa Katılımcının paylaşımı durdurulur.
-- Katılımcı ekran paylaştığında Yönetici penceresi otomatik büyüyerek ekranı gösterir; paylaşım bitince küçük always-on-top kamera paneline döner.
-- Süre sayacı, TURN/STUN, otomatik yeniden bağlantı, cihaz seçimi, çizim ve always-on-top kontroller korunur.
+## Desktop
 
+- Windows portable EXE ve macOS DMG kaynaklari repo kokundedir.
+- Kamera/mikrofon, arka plan, ekran paylasimi, cizim, zamanlayici ve always-on-top kontroller korunur.
+- Windows ana MiniMeet penceresi toplantida da taskbar'da kalir; simge durumundan geri acilabilir.
+- Katilimci linki varsayilan olarak `https://minimeeting.pages.dev` uzerinden uretilir.
+- Windows'ta Cloudflare adresi degisirse EXE yanindaki `minimeet.config.json` dosyasinda `webOrigin` degerini degistirmeniz yeterlidir.
 
-## v0.6
-- Başlangıç/ayar penceresi büyütüldü (uygun ekranda yaklaşık 1120×900).
-- Yönetici adı, süre, bağlantı, aygıtlar ve başlatma düğmesi mümkün olduğunca kaydırmadan görünür.
-- Küçük ekranlarda pencere çalışma alanına otomatik sığar.
-- Toplantı başlayınca önceki küçük always-on-top kamera paneli davranışı korunur.
+## Cloudflare Web
 
-## v0.7 - Kamera arka planı
-- Normal kamera
-- Orta seviye arka plan bulanıklığı
-- Özel arka plan resmi seçimi
-- Seçim sonraki açılışta hatırlanır
-- Toplantı sırasında Ayarlar bölümünden değiştirilebilir
+Web kodu `cloudflare-web/` klasorundedir. Cloudflare Pages Git entegrasyonunda Root directory olarak `cloudflare-web` secilir. Ayrintilar: `cloudflare-web/CLOUDFLARE-DEPLOY.md`.
 
-## v0.8.0
-- Arka plan maskeleme canvas compositing duzeltildi.
-- Bulanik (Orta) ve Arka Plan Resmi efektleri gercek kamera track'ine uygulanir.
+## Windows
 
-## v0.9.1 - macOS DMG desteği
-- macOS Universal DMG derleme yapılandırması eklendi (Apple Silicon + Intel).
-- GitHub Actions ile Mac sahibi olmadan DMG üretilebilir.
-- Kamera ve mikrofon izinleri macOS sistem izni üzerinden ilk açılışta istenir.
-- Ekran paylaşımı için macOS Screen Recording açıklaması eklendi.
-- İmzasız test DMG ve Developer ID + notarization kullanan dağıtım DMG iş akışları ayrıldı.
+- `CREATE-PORTABLE-EXE.bat`: Node gerekmeden Electron runtime indirip portable klasor olusturur.
+- `BUILD-WINDOWS.bat`: Node/Electron paketleri ile build alir.
+
+## macOS
+
+GitHub Actions workflow'lari korunmustur:
+- `Build macOS DMG - Unsigned`
+- `Build macOS DMG - Signed and Notarized`

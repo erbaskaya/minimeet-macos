@@ -19,6 +19,36 @@ function mediaPath(file) {
   return path.join(__dirname, file);
 }
 
+function normalizeWebOrigin(value) {
+  try {
+    const url = new URL(String(value || '').trim());
+    if (url.protocol !== 'https:' && url.hostname !== 'localhost' && url.hostname !== '127.0.0.1') return '';
+    return url.origin;
+  } catch {
+    return '';
+  }
+}
+
+function readAppConfig() {
+  const fallback = 'https://minimeeting.pages.dev';
+  const candidates = [
+    process.env.MINIMEET_WEB_ORIGIN ? { webOrigin: process.env.MINIMEET_WEB_ORIGIN } : null,
+    path.join(path.dirname(process.execPath), 'minimeet.config.json'),
+    mediaPath('app-config.json')
+  ].filter(Boolean);
+
+  for (const candidate of candidates) {
+    try {
+      const data = typeof candidate === 'object'
+        ? candidate
+        : JSON.parse(fs.readFileSync(candidate, 'utf8'));
+      const webOrigin = normalizeWebOrigin(data?.webOrigin);
+      if (webOrigin) return { webOrigin };
+    } catch {}
+  }
+  return { webOrigin: fallback };
+}
+
 function stateFile() {
   return path.join(app.getPath('userData'), 'window-state.json');
 }
@@ -61,6 +91,7 @@ function createMediaWindow() {
     frame: false,
     show: false,
     backgroundColor: '#090d16',
+    icon: mediaPath('minimeet-icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -240,7 +271,7 @@ function enterMeetingMode() {
   if (!mediaWindow || mediaWindow.isDestroyed()) return;
 
   mediaWindow.setAlwaysOnTop(true, 'screen-saver');
-  mediaWindow.setSkipTaskbar(true);
+  mediaWindow.setSkipTaskbar(false);
   mediaWindow.setResizable(true);
   mediaWindow.setMinimumSize(220, 300);
   mediaWindow.setAspectRatio(320 / 430);
@@ -365,4 +396,4 @@ ipcMain.on('remote-screen-active', (_event, active) => setRemoteScreenViewing(ac
 ipcMain.on('close-app', () => app.quit());
 ipcMain.on('minimize-media', () => mediaWindow?.minimize());
 ipcMain.handle('copy-text', (_event, text) => { clipboard.writeText(String(text || '')); return true; });
-ipcMain.handle('get-app-info', () => ({ version: app.getVersion(), platform: process.platform, lessonActive: meetingActive, annotationActive }));
+ipcMain.handle('get-app-info', () => ({ version: app.getVersion(), platform: process.platform, lessonActive: meetingActive, annotationActive, ...readAppConfig() }));
